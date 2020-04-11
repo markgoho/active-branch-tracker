@@ -1,0 +1,80 @@
+.octicon {
+  fill: currentColor;
+}
+
+:host {
+  --border-radius: 4px;
+  --card-color: hsl(120, 13%, 48%);
+  --card-text-color: hsl(120, 79%, 2%);
+
+  background-color: var(--card-color);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  color: var(--card-text-color);
+
+  > * + * {
+    margin-top: 1rem;
+  }
+
+  &.failing {
+    --card-color: hsl(0, 11%, 55%);
+    --card-text-color: hsl(0, 37%, 9%);
+  }
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.container-heading {
+  padding: 1rem;
+  background-color: var(--card-text-color);
+  border-radius: var(--border-radius);
+  color: var(--card-color);
+}
+
+.repo-name {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.last-updated,
+.committer {
+  display: flex;
+  align-items: center;
+}
+
+.branch-name,
+.commit-message,
+.latest-sha {
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  align-items: center;
+}
+
+.branch-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+
+  svg {
+    margin-right: 0.3rem;
+  }
+}
+
+.last-updated,
+.commit-message,
+.latest-sha,
+.committer {
+  max-width: 15rem;
+  font-size: 1rem;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+}
