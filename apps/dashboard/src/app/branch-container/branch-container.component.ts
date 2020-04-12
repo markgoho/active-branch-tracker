@@ -1,10 +1,6 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input
-} from '@angular/core';
-import { BranchInfo } from '../app.component';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+
+import { BranchInfo, CheckSuiteConclusion } from '../app.component';
 
 @Component({
   selector: 'idc-branch-container',
@@ -13,18 +9,20 @@ import { BranchInfo } from '../app.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BranchContainerComponent {
+  CheckSuiteConclusion = CheckSuiteConclusion;
+
   @Input() branch: BranchInfo;
 
   getBranchLink(): string {
     const {
       repositoryName,
       organizationName,
-      head_branch,
+      branchName: head_branch,
       defaultBranch
     } = this.branch;
 
     const needsTree = defaultBranch ? `` : `tree/`;
-    
+
     return `//github.com/${organizationName}/${repositoryName}/${needsTree}${head_branch}`;
   }
 

@@ -1,5 +1,13 @@
+import * as admin from 'firebase-admin';
+
 import { WebhookPayload } from './webhookPayload';
-import { ActionType } from './actionType';
+import { BranchInfo } from './branchStatus';
+
+export enum CheckSuiteActionType {
+  Completed = 'completed',
+  Requested = 'requested',
+  Rerequested = 'rerequested'
+}
 
 export enum CheckSuiteStatus {
   Requested = 'requested',
@@ -18,7 +26,7 @@ export enum CheckSuiteConclusion {
 }
 
 export interface CheckSuitePayload extends WebhookPayload {
-  action: ActionType;
+  action: CheckSuiteActionType;
   check_suite: {
     id: number;
     node_id: string;
@@ -63,4 +71,42 @@ export interface CheckSuitePayload extends WebhookPayload {
       };
     };
   };
+}
+
+export async function handleCheckSuiteEvent(
+  payload: CheckSuitePayload
+): Promise<any> {
+  const { check_suite, repository, organization } = payload;
+
+  const { name: repositoryName, default_branch } = repository;
+  const { login: organizationName } = organization;
+
+  const {
+    head_branch: branchName,
+    head_commit,
+    head_sha,
+    updated_at,
+    conclusion: checkSuiteStatus
+  } = check_suite;
+
+  const currentStatus: BranchInfo = {
+    repositoryName,
+    organizationName,
+    branchName,
+    head_commit,
+    head_sha,
+    updated_at,
+    checkSuiteStatus,
+    defaultBranch: default_branch === branchName
+  };
+
+  try {
+    await admin
+      .firestore()
+      .collection(`branches`)
+      .doc(`${repositoryName}-${branchName}`)
+      .set(currentStatus);
+  } catch (e) {
+    console.error(e);
+  }
 }

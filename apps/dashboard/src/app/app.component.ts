@@ -6,8 +6,8 @@ import { map, tap } from 'rxjs/operators';
 export interface BranchInfo {
   repositoryName: string;
   organizationName: string;
-  head_branch: string;
-  head_commit: {
+  branchName: string;
+  head_commit?: {
     id: string;
     committer: {
       name: string;
@@ -21,9 +21,10 @@ export interface BranchInfo {
     tree_id: string;
     message: string;
   };
-  head_sha: string;
-  updated_at: string;
-  conclusion: string;
+  head_sha?: string;
+  created_at?: string;
+  updated_at?: string;
+  checkSuiteStatus?: CheckSuiteConclusion;
   defaultBranch: boolean;
 }
 
@@ -61,7 +62,7 @@ export class AppComponent implements OnInit {
         map(docChange => docChange.map(change => change.payload.doc.data())),
         tap(branchInfo => {
           for (const branch of branchInfo) {
-            if (branch.conclusion === CheckSuiteConclusion.Failure) {
+            if (branch.checkSuiteStatus === CheckSuiteConclusion.Failure) {
               console.log('FAILURE!');
             }
           }

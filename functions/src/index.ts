@@ -1,49 +1,31 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CheckSuitePayload } from './checkSuite';
-// Start writing Firebase Functions
-// https://firebase.google.com/docs/functions/typescript
+
+import { CheckSuitePayload, handleCheckSuiteEvent } from './checkSuite';
+import { CreateEventPayload, handleCreateEvent } from './createEvent';
+import { DeleteEventPayload, handleDeleteEvent } from './deleteEvent';
 
 admin.initializeApp();
 
 export const webhook = functions.https.onRequest(async (request, response) => {
-  const {
-    check_suite,
-    repository,
-    organization
-  } = request.body as CheckSuitePayload;
+  const eventType = request.header('X-Github-Event');
 
-  const { name: repositoryName, default_branch } = repository;
-  const { login: organizationName } = organization;
+  console.log({ eventType });
 
-  const {
-    head_branch,
-    head_commit,
-    head_sha,
-    updated_at,
-    conclusion
-  } = check_suite;
+  switch (eventType) {
+    case 'create':
+      console.log('Handling event: CREATE');
+      await handleCreateEvent(request.body as CreateEventPayload);
+      break;
 
-  const currentStatus = {
-    repositoryName,
-    organizationName,
-    head_branch,
-    head_commit,
-    head_sha,
-    updated_at,
-    conclusion,
-    defaultBranch: default_branch === head_branch
-  };
+    case 'delete':
+      await handleDeleteEvent(request.body as DeleteEventPayload);
+      break;
 
-  try {
-    await admin
-      .firestore()
-      .collection(`branches`)
-      .doc(head_branch)
-      .set(currentStatus);
-    return response.status(200).send('Thanks');
-  } catch (e) {
-    console.error(e);
-    return response.status(200).send('Error');
+    case 'check_suite':
+      await handleCheckSuiteEvent(request.body as CheckSuitePayload);
+      break;
   }
+
+  return response.status(200).send('Thanks');
 });
