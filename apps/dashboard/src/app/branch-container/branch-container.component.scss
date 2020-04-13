@@ -2,6 +2,12 @@
   fill: currentColor;
 }
 
+.container-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .branch {
   --border-radius: 4px;
   --card-color: hsl(120, 13%, 48%);
@@ -17,14 +23,23 @@
   }
 
   &.neutral {
-    --card-color: hsl(0, 0%, 80%);
+    --card-color: hsl(0, 0%, 63%);
     --card-text-color: hsl(0, 0%, 9%);
   }
 
-  &.failing {
+  &.failure {
     --card-color: hsl(0, 11%, 55%);
     --card-text-color: hsl(0, 37%, 9%);
   }
+}
+
+.octicon-x {
+  fill: hsl(0, 22%, 20%);
+  box-shadow: inset 1px 1px 0 0 black;
+}
+
+.octicon-check {
+  fill: hsl(120, 22%, 20%);
 }
 
 a {
@@ -81,4 +96,37 @@ a {
   svg {
     margin-right: 0.5rem;
   }
+}
+
+.card-content {
+  position: relative;
+}
+
+.left-column {
+  width: 65%;
+}
+
+.left-column > * + * {
+  margin-top: 0.75rem;
+}
+
+.right-column {
+  position: absolute;
+  top: -23px;
+  right: 5px;
+  font-family: 'Open Sans Condensed', sans-serif;
+  letter-spacing: -8px;
+  font-size: 6.5rem;
+
+  span {
+    line-height: 1;
+  }
+}
+
+.branch .failure-percentage {
+  color: hsl(120, 9%, 42%);
+}
+
+.branch.failure .failure-percentage {
+  color: hsl(0, 9%, 42%);
 }

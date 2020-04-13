@@ -23,4 +23,7 @@ export interface BranchInfo {
   updated_at?: string;
   checkSuiteStatus?: CheckSuiteConclusion;
   defaultBranch: boolean;
+  checkSuiteRuns: number;
+  checkSuiteFailures: number;
+  createdBy?: string;
 }

@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 
 import { WebhookPayload } from './webhookPayload';
-import { BranchInfo } from './branchStatus';
+import { BranchInfo } from './branchInfo';
 
 export enum CheckSuiteActionType {
   Completed = 'completed',
@@ -89,6 +89,24 @@ export async function handleCheckSuiteEvent(
     conclusion: checkSuiteStatus
   } = check_suite;
 
+  const branchRef = admin
+    .firestore()
+    .collection(`branches`)
+    .doc(`${repositoryName}-${branchName}`);
+
+  const existingStatus = await branchRef.get();
+
+  let checkSuiteRuns = 0;
+  let checkSuiteFailures = 0;
+
+  if (existingStatus.exists) {
+    const existingStatusDoc = existingStatus.data() as BranchInfo;
+    checkSuiteRuns = existingStatusDoc.checkSuiteRuns;
+    checkSuiteFailures = existingStatusDoc.checkSuiteFailures;
+  }
+
+  const failure = checkSuiteStatus === 'failure' ? 1 : 0;
+
   const currentStatus: BranchInfo = {
     repositoryName,
     organizationName,
@@ -96,6 +114,8 @@ export async function handleCheckSuiteEvent(
     head_commit,
     head_sha,
     updated_at,
+    checkSuiteRuns: checkSuiteRuns + 1,
+    checkSuiteFailures: checkSuiteFailures + failure,
     checkSuiteStatus,
     defaultBranch: default_branch === branchName
   };
@@ -105,7 +125,7 @@ export async function handleCheckSuiteEvent(
       .firestore()
       .collection(`branches`)
       .doc(`${repositoryName}-${branchName}`)
-      .set(currentStatus);
+      .set(currentStatus, { merge: true });
   } catch (e) {
     console.error(e);
   }

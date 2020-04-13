@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 
 import { Repository, Organization, Sender } from './webhookPayload';
-import { BranchInfo } from './branchStatus';
+import { BranchInfo } from './branchInfo';
 import { CheckSuiteConclusion } from './checkSuite';
 
 export interface CreateEventPayload {
@@ -18,8 +18,9 @@ export interface CreateEventPayload {
 export async function handleCreateEvent(
   payload: CreateEventPayload
 ): Promise<any> {
-  const { ref: branchName, repository, organization } = payload;
+  const { ref: branchName, repository, organization, sender } = payload;
 
+  const { login: createdBy } = sender;
   const { name: repositoryName } = repository;
   const { login: organizationName } = organization;
 
@@ -34,7 +35,10 @@ export async function handleCreateEvent(
     branchName,
     defaultBranch: false,
     created_at: new Date().toISOString(),
-    checkSuiteStatus: CheckSuiteConclusion.Neutral
+    checkSuiteRuns: 0,
+    checkSuiteFailures: 0,
+    checkSuiteStatus: CheckSuiteConclusion.Neutral,
+    createdBy
   };
 
   try {

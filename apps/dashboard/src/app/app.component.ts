@@ -26,6 +26,9 @@ export interface BranchInfo {
   updated_at?: string;
   checkSuiteStatus?: CheckSuiteConclusion;
   defaultBranch: boolean;
+  checkSuiteRuns: number;
+  checkSuiteFailures: number;
+  createdBy?: string;
 }
 
 export enum CheckSuiteConclusion {
@@ -52,6 +55,8 @@ export class AppComponent implements OnInit {
   CheckSuiteConclusion = CheckSuiteConclusion;
   branchInfo$: Observable<BranchInfoVM>;
 
+  scream = new Audio('/assets/willhelm.wav');
+
   constructor(private afs: AngularFirestore) {}
 
   ngOnInit(): void {
@@ -60,11 +65,17 @@ export class AppComponent implements OnInit {
       .snapshotChanges()
       .pipe(
         map(docChange => docChange.map(change => change.payload.doc.data())),
-        tap(branchInfo => {
+        tap(async branchInfo => {
+          let anyFailures = false;
           for (const branch of branchInfo) {
             if (branch.checkSuiteStatus === CheckSuiteConclusion.Failure) {
-              console.log('FAILURE!');
+              anyFailures = true;
             }
+          }
+          if (anyFailures === true) {
+            try {
+              await this.scream.play();
+            } catch (e) {}
           }
         }),
         map(branchInfo => {
