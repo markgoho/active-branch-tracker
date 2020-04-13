@@ -35,7 +35,6 @@
 
 .octicon-x {
   fill: hsl(0, 22%, 20%);
-  box-shadow: inset 1px 1px 0 0 black;
 }
 
 .octicon-check {
@@ -100,10 +99,11 @@ a {
 
 .card-content {
   position: relative;
+  width: 100%;
 }
 
 .left-column {
-  width: 65%;
+  padding-right: 8rem;
 }
 
 .left-column > * + * {
@@ -129,4 +129,8 @@ a {
 
 .branch.failure .failure-percentage {
   color: hsl(0, 9%, 42%);
+}
+
+.no-wrap {
+  white-space: nowrap;
 }

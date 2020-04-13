@@ -79,12 +79,12 @@ export class AppComponent implements OnInit {
           }
         }),
         map(branchInfo => {
-          const defaultBranches = branchInfo.filter(
-            branch => branch.defaultBranch === true
-          );
-          const otherBranches = branchInfo.filter(
-            branch => branch.defaultBranch === false
-          );
+          const defaultBranches = branchInfo
+            .filter(branch => branch.defaultBranch === true)
+            .sort(sortByTime);
+          const otherBranches = branchInfo
+            .filter(branch => branch.defaultBranch === false)
+            .sort(sortByTime);
 
           return {
             defaultBranches,
@@ -93,4 +93,11 @@ export class AppComponent implements OnInit {
         })
       );
   }
+}
+
+function sortByTime(branchA: BranchInfo, branchB: BranchInfo): number {
+  const { updated_at: updatedA } = branchA;
+  const { updated_at: updatedB } = branchB;
+
+  return new Date(updatedA).getTime() > new Date(updatedB).getTime() ? -1 : 1;
 }

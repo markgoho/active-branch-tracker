@@ -8,10 +8,14 @@
 }
 
 .branches-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(1px, 20rem));
-  grid-gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
   margin-top: 1rem;
+
+  > * {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .branch-type-heading {

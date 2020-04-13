@@ -31,4 +31,10 @@ export class BranchContainerComponent {
 
     return `//github.com/${organizationName}/${repositoryName}/commit/${head_sha}`;
   }
+
+  getFailurePercentage(): number {
+    const { checkSuiteRuns, checkSuiteFailures} = this.branch;
+
+    return Math.round((checkSuiteRuns - checkSuiteFailures) / checkSuiteRuns * 100)
+  }
 }
