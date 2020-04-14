@@ -13,14 +13,15 @@ export interface DeleteEventPayload {
 export async function handleDeleteEvent(
   payload: DeleteEventPayload
 ): Promise<any> {
-  const { ref, repository } = payload;
+  const { ref: branchName, repository, organization } = payload;
 
   const { name: repositoryName } = repository;
+  const { login: organizationName } = organization;
 
   const branchRef = admin
     .firestore()
     .collection('branches')
-    .doc(`${repositoryName}-${ref}`);
+    .doc(`${organizationName}-${repositoryName}-${branchName}`);
 
   try {
     await branchRef.delete();

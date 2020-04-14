@@ -12,6 +12,7 @@ export class BranchContainerComponent {
   CheckSuiteConclusion = CheckSuiteConclusion;
 
   @Input() branch: BranchInfo;
+  @Input() viewType = 'expanded';
 
   getBranchLink(): string {
     const {
@@ -33,8 +34,10 @@ export class BranchContainerComponent {
   }
 
   getFailurePercentage(): number {
-    const { checkSuiteRuns, checkSuiteFailures} = this.branch;
+    const { checkSuiteRuns, checkSuiteFailures } = this.branch;
 
-    return Math.round((checkSuiteRuns - checkSuiteFailures) / checkSuiteRuns * 100)
+    return Math.round(
+      ((checkSuiteRuns - checkSuiteFailures) / checkSuiteRuns) * 100
+    );
   }
 }

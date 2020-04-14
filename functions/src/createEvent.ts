@@ -27,7 +27,7 @@ export async function handleCreateEvent(
   const branchRef = admin
     .firestore()
     .collection('branches')
-    .doc(`${repositoryName}-${branchName}`);
+    .doc(`${organizationName}-${repositoryName}-${branchName}`);
 
   const branchInfo: BranchInfo = {
     repositoryName,

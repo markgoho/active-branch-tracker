@@ -92,7 +92,7 @@ export async function handleCheckSuiteEvent(
   const branchRef = admin
     .firestore()
     .collection(`branches`)
-    .doc(`${repositoryName}-${branchName}`);
+    .doc(`${organizationName}-${repositoryName}-${branchName}`);
 
   const existingStatus = await branchRef.get();
 
@@ -124,7 +124,7 @@ export async function handleCheckSuiteEvent(
     await admin
       .firestore()
       .collection(`branches`)
-      .doc(`${repositoryName}-${branchName}`)
+      .doc(`${organizationName}-${repositoryName}-${branchName}`)
       .set(currentStatus, { merge: true });
   } catch (e) {
     console.error(e);

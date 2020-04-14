@@ -1,5 +1,11 @@
-<ng-container *ngIf="branchInfo$ | async as vm">
-  <h2 class="branch-type-heading">Default Branches</h2>
+<!-- <div class="time-since-broken" *ngIf="time$ | async as time">
+  {{ time | date: 'medium' }}
+</div> -->
+
+<ng-container *ngIf="activeBranchesVm$ | async as vm">
+  <div class="branch-container-heading">
+    <h2 class="branch-type-heading">Default Branches</h2>
+  </div>
   <div class="branches-list">
     <idc-branch-container
       *ngFor="let branch of vm.defaultBranches"
@@ -7,10 +13,33 @@
     ></idc-branch-container>
   </div>
 
-  <h2 class="branch-type-heading other-branches">Other Branches</h2>
+  <div class="branch-container-heading">
+    <h2 class="branch-type-heading other-branches">Other Branches</h2>
+    <button
+      *ngIf="vm.viewType === 'collapsed'"
+      type="button"
+      class="unfold-view"
+      (click)="setConfig('expanded')"
+    >
+      <svg height="1.5rem" width="1.5rem" class="svg-icon expand">
+        <use href="assets/icons.svg#expand"></use>
+      </svg>
+    </button>
+    <button
+      *ngIf="vm.viewType === 'expanded'"
+      type="button"
+      class="fold-view"
+      (click)="setConfig('collapsed')"
+    >
+      <svg height="1.5rem" width="1.5rem" class="svg-icon collapse">
+        <use href="assets/icons.svg#collapse"></use>
+      </svg>
+    </button>
+  </div>
   <div class="branches-list">
     <idc-branch-container
       *ngFor="let branch of vm.otherBranches"
+      [viewType]="config$ | async"
       [branch]="branch"
     ></idc-branch-container>
   </div>
