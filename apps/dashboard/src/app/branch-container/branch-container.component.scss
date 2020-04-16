@@ -42,6 +42,10 @@
   }
 }
 
+.collapsed .repo-name {
+  display: none;
+}
+
 .heading-left {
   padding-right: 1rem;
 }
@@ -74,7 +78,7 @@ a {
 }
 
 .repo-name {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -157,8 +161,19 @@ a {
 
 .no-wrap {
   white-space: nowrap;
+  line-height: 1;
 }
 
 .svg-icon {
   fill: currentColor;
+}
+
+.collapsed {
+  .container-heading {
+    height: 100%;
+  }
+
+  .svg-icon.branch-icon {
+    display: none;
+  }
 }

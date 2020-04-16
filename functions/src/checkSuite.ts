@@ -86,47 +86,63 @@ export async function handleCheckSuiteEvent(
     head_commit,
     head_sha,
     updated_at,
-    conclusion: checkSuiteStatus
+    conclusion: checkSuiteStatus,
+    latest_check_runs_count
   } = check_suite;
 
-  const branchRef = admin
+  const checkSuitePayloadRef = admin
     .firestore()
-    .collection(`branches`)
-    .doc(`${organizationName}-${repositoryName}-${branchName}`);
-
-  const existingStatus = await branchRef.get();
-
-  let checkSuiteRuns = 0;
-  let checkSuiteFailures = 0;
-
-  if (existingStatus.exists) {
-    const existingStatusDoc = existingStatus.data() as BranchInfo;
-    checkSuiteRuns = existingStatusDoc.checkSuiteRuns;
-    checkSuiteFailures = existingStatusDoc.checkSuiteFailures;
-  }
-
-  const failure = checkSuiteStatus === 'failure' ? 1 : 0;
-
-  const currentStatus: BranchInfo = {
-    repositoryName,
-    organizationName,
-    branchName,
-    head_commit,
-    head_sha,
-    updated_at,
-    checkSuiteRuns: checkSuiteRuns + 1,
-    checkSuiteFailures: checkSuiteFailures + failure,
-    checkSuiteStatus,
-    defaultBranch: default_branch === branchName
-  };
+    .collection('payloads')
+    .doc(`check_suite-${organizationName}-${repositoryName}-${branchName}`);
 
   try {
-    await admin
+    await checkSuitePayloadRef.set(payload);
+  } catch (e) {
+    console.error('Could not set payload to ref', payload);
+  }
+
+  if (latest_check_runs_count > 1) {
+    const branchRef = admin
       .firestore()
       .collection(`branches`)
-      .doc(`${organizationName}-${repositoryName}-${branchName}`)
-      .set(currentStatus, { merge: true });
-  } catch (e) {
-    console.error(e);
+      .doc(`${organizationName}-${repositoryName}-${branchName}`);
+
+    const existingStatus = await branchRef.get();
+
+    let checkSuiteRuns = 0;
+    let checkSuiteFailures = 0;
+
+    if (existingStatus.exists) {
+      const existingStatusDoc = existingStatus.data() as BranchInfo;
+      checkSuiteRuns = existingStatusDoc.checkSuiteRuns;
+      checkSuiteFailures = existingStatusDoc.checkSuiteFailures;
+    }
+
+    const failure = checkSuiteStatus === 'failure' ? 1 : 0;
+
+    const currentStatus: BranchInfo = {
+      repositoryName,
+      organizationName,
+      branchName,
+      head_commit,
+      head_sha,
+      updated_at,
+      checkSuiteRuns: checkSuiteRuns + 1,
+      checkSuiteFailures: checkSuiteFailures + failure,
+      checkSuiteStatus,
+      defaultBranch: default_branch === branchName
+    };
+
+    try {
+      await admin
+        .firestore()
+        .collection(`branches`)
+        .doc(`${organizationName}-${repositoryName}-${branchName}`)
+        .set(currentStatus, { merge: true });
+    } catch (e) {
+      console.error(e);
+    }
+  } else {
+    console.log('Short check run encountered. Skipping!');
   }
 }

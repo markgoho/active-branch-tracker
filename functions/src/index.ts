@@ -14,7 +14,6 @@ export const webhook = functions.https.onRequest(async (request, response) => {
 
   switch (eventType) {
     case 'create':
-      console.log('Handling event: CREATE');
       await handleCreateEvent(request.body as CreateEventPayload);
       break;
 

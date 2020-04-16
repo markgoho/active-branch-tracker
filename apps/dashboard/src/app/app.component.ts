@@ -86,8 +86,6 @@ export class AppComponent implements OnInit {
       this.config.next('expanded');
     }
 
-    this.afs.firestore.enablePersistence();
-
     this.branchInfo$ = this.afs
       .collection<BranchInfo>('branches')
       .snapshotChanges()
@@ -102,6 +100,7 @@ export class AppComponent implements OnInit {
             const { checkSuiteStatus } = branch.payload.doc.data();
             if (checkSuiteStatus === CheckSuiteConclusion.Failure) {
               newFailure = true;
+              console.log({ newFailure: branch });
             }
           }
 

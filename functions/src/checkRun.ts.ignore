@@ -1,0 +1,78 @@
+import * as admin from 'firebase-admin';
+import { WebhookPayload } from './webhookPayload';
+
+export interface CheckRunPayload extends WebhookPayload {
+  action: 'created' | 'completed' | 'rerequested' | 'requested_action';
+  check_run: CheckRun;
+  requested_action: RequestedAction;
+  
+}
+
+export async function handleCheckSuiteEvent(
+  payload: CheckRunPayload
+): Promise<any> {
+  const { check_run, repository, organization } = payload;
+
+  const { name: repositoryName, default_branch } = repository;
+  const { login: organizationName } = organization;
+
+  const {
+    head_branch: branchName,
+    head_commit,
+    head_sha,
+    updated_at,
+    conclusion: checkSuiteStatus
+  } = check_suite;
+
+  const checkSuitePayloadRef = admin
+    .firestore()
+    .collection('payloads')
+    .doc(`check_suite-${organizationName}-${repositoryName}-${branchName}`);
+
+  try {
+    await checkSuitePayloadRef.set(payload);
+  } catch (e) {
+    console.error('Could not set payload to ref', payload);
+  }
+
+  const branchRef = admin
+    .firestore()
+    .collection(`branches`)
+    .doc(`${organizationName}-${repositoryName}-${branchName}`);
+
+  const existingStatus = await branchRef.get();
+
+  let checkSuiteRuns = 0;
+  let checkSuiteFailures = 0;
+
+  if (existingStatus.exists) {
+    const existingStatusDoc = existingStatus.data() as BranchInfo;
+    checkSuiteRuns = existingStatusDoc.checkSuiteRuns;
+    checkSuiteFailures = existingStatusDoc.checkSuiteFailures;
+  }
+
+  const failure = checkSuiteStatus === 'failure' ? 1 : 0;
+
+  const currentStatus: BranchInfo = {
+    repositoryName,
+    organizationName,
+    branchName,
+    head_commit,
+    head_sha,
+    updated_at,
+    checkSuiteRuns: checkSuiteRuns + 1,
+    checkSuiteFailures: checkSuiteFailures + failure,
+    checkSuiteStatus,
+    defaultBranch: default_branch === branchName
+  };
+
+  try {
+    await admin
+      .firestore()
+      .collection(`branches`)
+      .doc(`${organizationName}-${repositoryName}-${branchName}`)
+      .set(currentStatus, { merge: true });
+  } catch (e) {
+    console.error(e);
+  }
+}
