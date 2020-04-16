@@ -23,7 +23,8 @@
             "aot": true,
             "assets": [
               "apps/dashboard/src/favicon.ico",
-              "apps/dashboard/src/assets"
+              "apps/dashboard/src/assets",
+              "apps/dashboard/src/manifest.webmanifest"
             ],
             "styles": ["apps/dashboard/src/styles.scss"],
             "scripts": []
@@ -55,7 +56,9 @@
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "apps/dashboard/ngsw-config.json"
             }
           }
         },
