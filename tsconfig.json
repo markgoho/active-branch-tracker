@@ -15,7 +15,14 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@idc/branches/data-access": ["libs/branches/data-access/src/index.ts"],
+      "@idc/branches/feature": ["libs/branches/feature/src/index.ts"],
+      "@idc/branches/ui-components": [
+        "libs/branches/ui-components/src/index.ts"
+      ],
+      "@idc/display-config": ["libs/display-config/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

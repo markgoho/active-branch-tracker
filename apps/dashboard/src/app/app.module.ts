@@ -1,15 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+
+import { BranchesFeatureModule } from '@idc/branches/feature';
 
 import { AppComponent } from './app.component';
-import { BranchContainerComponent } from './branch-container/branch-container.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 @NgModule({
-  declarations: [AppComponent, BranchContainerComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp({
@@ -22,12 +22,11 @@ import { environment } from '../environments/environment';
       appId: '1:633810997367:web:931c5bc156a5e71d097672',
       measurementId: 'G-WV4T2RGHM3'
     }),
-    AngularFirestoreModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
-    })
+    }),
+    BranchesFeatureModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

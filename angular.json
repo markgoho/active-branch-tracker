@@ -23,7 +23,8 @@
             "aot": true,
             "assets": [
               "apps/dashboard/src/robots.txt",
-              "apps/dashboard/src/favicon.ico",
+              "apps/dashboard/src/favicon-16x16.png",
+              "apps/dashboard/src/favicon-32x32.png",
               "apps/dashboard/src/assets",
               "apps/dashboard/src/manifest.webmanifest"
             ],
@@ -129,6 +130,134 @@
             "tsConfig": ["apps/dashboard-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/dashboard-e2e/**"]
           }
+        }
+      }
+    },
+    "branches-data-access": {
+      "projectType": "library",
+      "root": "libs/branches/data-access",
+      "sourceRoot": "libs/branches/data-access/src",
+      "prefix": "idc",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/branches/data-access/tsconfig.lib.json",
+              "libs/branches/data-access/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/branches/data-access/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/branches/data-access/jest.config.js",
+            "tsConfig": "libs/branches/data-access/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/branches/data-access/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "branches-feature": {
+      "projectType": "library",
+      "root": "libs/branches/feature",
+      "sourceRoot": "libs/branches/feature/src",
+      "prefix": "idc",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/branches/feature/tsconfig.lib.json",
+              "libs/branches/feature/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/branches/feature/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/branches/feature/jest.config.js",
+            "tsConfig": "libs/branches/feature/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/branches/feature/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "branches-ui-components": {
+      "projectType": "library",
+      "root": "libs/branches/ui-components",
+      "sourceRoot": "libs/branches/ui-components/src",
+      "prefix": "idc",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/branches/ui-components/tsconfig.lib.json",
+              "libs/branches/ui-components/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/branches/ui-components/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/branches/ui-components/jest.config.js",
+            "tsConfig": "libs/branches/ui-components/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/branches/ui-components/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "display-config": {
+      "projectType": "library",
+      "root": "libs/display-config",
+      "sourceRoot": "libs/display-config/src",
+      "prefix": "idc",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/display-config/tsconfig.lib.json",
+              "libs/display-config/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/display-config/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/display-config/jest.config.js",
+            "tsConfig": "libs/display-config/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/display-config/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }
