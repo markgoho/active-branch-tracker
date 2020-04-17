@@ -6,7 +6,7 @@ import {
   EventEmitter
 } from '@angular/core';
 
-import { BranchInfo, CheckSuiteConclusion } from '../app.component';
+import { BranchInfo, CheckSuiteConclusion, DisplayConfig } from '../app.component';
 
 @Component({
   selector: 'idc-branch-container',
@@ -18,7 +18,7 @@ export class BranchContainerComponent {
   CheckSuiteConclusion = CheckSuiteConclusion;
 
   @Input() branch: BranchInfo;
-  @Input() viewType = 'expanded';
+  @Input() viewType: 'expanded' | 'collapsed' = 'expanded';
 
   @Output() trackBranch = new EventEmitter<BranchInfo>();
   @Output() untrackBranch = new EventEmitter<BranchInfo>();

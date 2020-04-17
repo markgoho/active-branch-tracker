@@ -4,7 +4,7 @@
   --card-text-color: hsl(120, 79%, 2%);
   --card-color-dark: hsl(120, 22%, 20%);
 
-  --heart-color: var(--card-color-dark);
+  --light-bulb-color: var(--card-color-dark);
 
   background-color: var(--card-color);
   padding: 1rem;
@@ -13,7 +13,7 @@
   height: 100%;
 
   > * + * {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   &.collapsed {
@@ -45,6 +45,14 @@
     --card-text-color: hsl(0, 11%, 55%);
     --card-color: hsl(0, 37%, 9%);
   }
+
+  &.tracked {
+    --light-bulb-color: hsl(59, 93%, 45%);
+
+    .light-bulb-button:hover {
+      --light-bulb-color: var(--card-color-dark);
+    }
+  }
 }
 
 .collapsed .repo-name {
@@ -52,21 +60,25 @@
 }
 
 .heading-left {
+  display: flex;
+  align-items: center;
   padding-right: 1rem;
 }
 
-.heart-button {
-  position: absolute;
-  top: -8px;
-  left: -7px;
+.light-bulb-button {
+  margin-right: 1rem;
 
-  .svg-icon.heart {
-    fill: var(--heart-color);
-    stroke: var(--heart-outline);
+  .svg-icon.light-bulb {
+    fill: var(--light-bulb-color);
+    transition: fill 150ms ease-in;
+  }
+
+  &:hover {
+    --light-bulb-color: hsl(59, 93%, 45%);
   }
 }
 
-.collapsed .heart-button {
+.collapsed .light-bulb-button {
   display: none;
 }
 
@@ -96,6 +108,7 @@ a {
   background-color: var(--card-text-color);
   border-radius: var(--border-radius);
   color: var(--card-color);
+  z-index: 1;
 }
 
 .repo-name {

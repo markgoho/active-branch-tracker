@@ -18,20 +18,20 @@
   <div class="branch-container-heading">
     <h2 class="branch-type-heading">Tracked Branches</h2>
     <button
-      *ngIf="vm.viewType === 'collapsed'"
+      *ngIf="vm.config.trackedBranches === 'collapsed'"
       type="button"
       class="unfold-view"
-      (click)="setConfig('expanded')"
+      (click)="setConfig({ trackedBranches: 'expanded' })"
     >
       <svg height="1.5rem" width="1.5rem" class="svg-icon expand">
         <use href="assets/icons.svg#expand"></use>
       </svg>
     </button>
     <button
-      *ngIf="vm.viewType === 'expanded'"
+      *ngIf="vm.config.trackedBranches === 'expanded'"
       type="button"
       class="fold-view"
-      (click)="setConfig('collapsed')"
+      (click)="setConfig({ trackedBranches: 'collapsed' })"
     >
       <svg height="1.5rem" width="1.5rem" class="svg-icon collapse">
         <use href="assets/icons.svg#collapse"></use>
@@ -41,7 +41,7 @@
   <div class="branches-list">
     <idc-branch-container
       *ngFor="let branch of vm.trackedBranches"
-      [viewType]="vm.viewType"
+      [viewType]="vm.config.trackedBranches"
       [branch]="branch"
       (untrackBranch)="untrackBranch($event)"
     ></idc-branch-container>
@@ -51,20 +51,20 @@
   <div class="branch-container-heading">
     <h2 class="branch-type-heading other-branches">Other Branches</h2>
     <button
-      *ngIf="vm.viewType === 'collapsed'"
+      *ngIf="vm.config.otherBranches === 'collapsed'"
       type="button"
       class="unfold-view"
-      (click)="setConfig('expanded')"
+      (click)="setConfig({ otherBranches: 'expanded' })"
     >
       <svg height="1.5rem" width="1.5rem" class="svg-icon expand">
         <use href="assets/icons.svg#expand"></use>
       </svg>
     </button>
     <button
-      *ngIf="vm.viewType === 'expanded'"
+      *ngIf="vm.config.otherBranches === 'expanded'"
       type="button"
       class="fold-view"
-      (click)="setConfig('collapsed')"
+      (click)="setConfig({ otherBranches: 'collapsed' })"
     >
       <svg height="1.5rem" width="1.5rem" class="svg-icon collapse">
         <use href="assets/icons.svg#collapse"></use>
@@ -74,7 +74,7 @@
   <div class="branches-list">
     <idc-branch-container
       *ngFor="let branch of vm.otherBranches"
-      [viewType]="vm.viewType"
+      [viewType]="vm.config.otherBranches"
       [branch]="branch"
       (trackBranch)="trackBranch($event)"
     ></idc-branch-container>

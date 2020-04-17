@@ -1,36 +1,37 @@
 <div
   class="branch"
-  [ngClass]="[branch.checkSuiteStatus, viewType]"
+  [ngClass]="[branch.checkSuiteStatus, viewType ? viewType : 'expanded']"
   [class.tracked]="branch.tracked"
 >
   <div class="container-heading">
-    <ng-container *ngIf="branch.defaultBranch === false"
-      ><button
-        *ngIf="branch.tracked === false; else untrack"
-        class="heart-button"
-        (click)="trackBranch.emit(branch)"
-      >
-        <svg class="svg-icon heart" width="2rem" height="2rem">
-          <use href="assets/icons.svg#heart"></use>
-        </svg></button
-    ></ng-container>
-
     <div class="heading-left">
-      <h2 class="repo-name">
-        <a
-          href="//github.com/{{ branch.organizationName }}/{{
-            branch.repositoryName
-          }}"
-          >{{ branch.organizationName }}/{{ branch.repositoryName }}</a
+      <ng-container *ngIf="branch.defaultBranch === false"
+        ><button
+          *ngIf="branch.tracked === false; else untrack"
+          class="light-bulb-button"
+          (click)="trackBranch.emit(branch)"
         >
-      </h2>
-      <div class="branch-name">
-        <svg class="svg-icon branch-icon" width="1rem" height="1rem">
-          <use href="assets/icons.svg#branch"></use>
-        </svg>
-        <a class="no-wrap" href="{{ getBranchLink() }}">{{
-          branch.branchName
-        }}</a>
+          <svg class="svg-icon light-bulb" width="1rem" height="2rem">
+            <use href="assets/icons.svg#light-bulb"></use>
+          </svg></button
+      ></ng-container>
+      <div class="repo-info">
+        <h2 class="repo-name">
+          <a
+            href="//github.com/{{ branch.organizationName }}/{{
+              branch.repositoryName
+            }}"
+            >{{ branch.organizationName }}/{{ branch.repositoryName }}</a
+          >
+        </h2>
+        <div class="branch-name">
+          <svg class="svg-icon branch-icon" width="1rem" height="1rem">
+            <use href="assets/icons.svg#branch"></use>
+          </svg>
+          <a class="no-wrap" href="{{ getBranchLink() }}">{{
+            branch.branchName
+          }}</a>
+        </div>
       </div>
     </div>
     <svg
@@ -101,9 +102,9 @@
 </div>
 
 <ng-template #untrack>
-  <button class="heart-button" (click)="untrackBranch.emit(branch)">
-    <svg class="svg-icon heart" width="2rem" height="2rem">
-      <use href="assets/icons.svg#heart"></use>
+  <button class="light-bulb-button" (click)="untrackBranch.emit(branch)">
+    <svg class="svg-icon light-bulb" width="1rem" height="2rem">
+      <use href="assets/icons.svg#light-bulb"></use>
     </svg>
   </button>
 </ng-template>

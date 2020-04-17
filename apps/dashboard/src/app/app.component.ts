@@ -49,6 +49,11 @@ interface BranchInfoVM {
   trackedBranches: BranchInfo[];
 }
 
+export interface DisplayConfig {
+  trackedBranches: 'expanded' | 'collapsed';
+  otherBranches: 'expanded' | 'collapsed';
+}
+
 @Component({
   selector: 'idc-root',
   templateUrl: './app.component.html',
@@ -61,7 +66,7 @@ export class AppComponent implements OnInit {
   activeBranchesVm$: Observable<any>;
 
   config: BehaviorSubject<string> = new BehaviorSubject<string>(
-    localStorage.getItem('viewType')
+    localStorage.getItem('config')
   );
 
   // time$: Observable<Date> = timer(0, 60000).pipe(
@@ -69,9 +74,10 @@ export class AppComponent implements OnInit {
   //   shareReplay(1)
   // );
 
-  config$: Observable<string> = this.config
-    .asObservable()
-    .pipe(distinctUntilChanged());
+  config$: Observable<DisplayConfig> = this.config.asObservable().pipe(
+    distinctUntilChanged(),
+    map(config => JSON.parse(config))
+  );
 
   scream = new Audio('/assets/willhelm.wav');
 
@@ -81,9 +87,15 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (localStorage.getItem('viewType') === null) {
-      localStorage.setItem('viewType', 'expanded');
-      this.config.next('expanded');
+    if (localStorage.getItem('config') === null) {
+      const config: DisplayConfig = {
+        trackedBranches: 'expanded',
+        otherBranches: 'expanded'
+      };
+
+      const configString = JSON.stringify(config);
+      localStorage.setItem('config', configString);
+      this.config.next(configString);
     }
 
     this.branchInfo$ = this.afs
@@ -141,18 +153,27 @@ export class AppComponent implements OnInit {
       this.branchInfo$,
       this.config$
     ]).pipe(
-      map(([branchInfo, viewType]: [BranchInfoVM, string]) => {
+      map(([branchInfo, config]: [BranchInfoVM, DisplayConfig]) => {
         return {
           ...branchInfo,
-          viewType
+          config
         };
       })
     );
   }
 
-  setConfig(viewType: string): void {
-    localStorage.setItem('viewType', viewType);
-    this.config.next(viewType);
+  setConfig(config: Partial<DisplayConfig>): void {
+    const currentConfig = JSON.parse(
+      localStorage.getItem('config')
+    ) as DisplayConfig;
+
+    const newConfig = JSON.stringify({
+      ...currentConfig,
+      ...config
+    });
+
+    localStorage.setItem('config', newConfig);
+    this.config.next(newConfig);
   }
 
   async trackBranch(branch: BranchInfo): Promise<void> {
