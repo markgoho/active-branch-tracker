@@ -38,7 +38,8 @@ export async function handleCreateEvent(
     checkSuiteRuns: 0,
     checkSuiteFailures: 0,
     checkSuiteStatus: CheckSuiteConclusion.Neutral,
-    createdBy
+    createdBy,
+    tracked: false
   };
 
   try {

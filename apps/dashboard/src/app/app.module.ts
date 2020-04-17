@@ -23,7 +23,9 @@ import { environment } from '../environments/environment';
       measurementId: 'G-WV4T2RGHM3'
     }),
     AngularFirestoreModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

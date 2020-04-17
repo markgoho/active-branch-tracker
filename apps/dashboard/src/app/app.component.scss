@@ -3,10 +3,6 @@
   padding: 1rem;
 }
 
-.time-since-broken {
-  color: red;
-}
-
 .branches-list {
   display: flex;
   align-items: stretch;
@@ -37,11 +33,7 @@
 .fold-view,
 .unfold-view {
   margin-left: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border: 0;
-  background-color: transparent;
   --icon-fill: hsl(120, 13%, 48%);
 
   &:hover {

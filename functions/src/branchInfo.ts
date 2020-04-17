@@ -26,4 +26,5 @@ export interface BranchInfo {
   checkSuiteRuns: number;
   checkSuiteFailures: number;
   createdBy?: string;
+  tracked: boolean;
 }

@@ -1,5 +1,20 @@
-<div class="branch" [ngClass]="[branch.checkSuiteStatus, viewType]">
+<div
+  class="branch"
+  [ngClass]="[branch.checkSuiteStatus, viewType]"
+  [class.tracked]="branch.tracked"
+>
   <div class="container-heading">
+    <ng-container *ngIf="branch.defaultBranch === false"
+      ><button
+        *ngIf="branch.tracked === false; else untrack"
+        class="heart-button"
+        (click)="trackBranch.emit(branch)"
+      >
+        <svg class="svg-icon heart" width="2rem" height="2rem">
+          <use href="assets/icons.svg#heart"></use>
+        </svg></button
+    ></ng-container>
+
     <div class="heading-left">
       <h2 class="repo-name">
         <a
@@ -84,3 +99,11 @@
     </div>
   </div>
 </div>
+
+<ng-template #untrack>
+  <button class="heart-button" (click)="untrackBranch.emit(branch)">
+    <svg class="svg-icon heart" width="2rem" height="2rem">
+      <use href="assets/icons.svg#heart"></use>
+    </svg>
+  </button>
+</ng-template>

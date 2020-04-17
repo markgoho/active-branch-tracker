@@ -1,13 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { AngularFirestore, DocumentChangeType } from '@angular/fire/firestore';
-import { Observable, of, BehaviorSubject, combineLatest, timer } from 'rxjs';
-import {
-  map,
-  tap,
-  distinctUntilChanged,
-  debounceTime,
-  shareReplay
-} from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { map, tap, distinctUntilChanged } from 'rxjs/operators';
+import { ServiceWorkerUpdateService } from './service-worker-update.service';
 
 export interface BranchInfo {
   repositoryName: string;
@@ -35,6 +30,7 @@ export interface BranchInfo {
   checkSuiteRuns: number;
   checkSuiteFailures: number;
   createdBy?: string;
+  tracked: boolean;
 }
 
 export enum CheckSuiteConclusion {
@@ -50,6 +46,7 @@ export enum CheckSuiteConclusion {
 interface BranchInfoVM {
   defaultBranches: BranchInfo[];
   otherBranches: BranchInfo[];
+  trackedBranches: BranchInfo[];
 }
 
 @Component({
@@ -78,7 +75,10 @@ export class AppComponent implements OnInit {
 
   scream = new Audio('/assets/willhelm.wav');
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(
+    private afs: AngularFirestore,
+    private swUpdate: ServiceWorkerUpdateService
+  ) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('viewType') === null) {
@@ -97,10 +97,13 @@ export class AppComponent implements OnInit {
           let newFailure = false;
 
           for (const branch of modified) {
-            const { checkSuiteStatus } = branch.payload.doc.data();
-            if (checkSuiteStatus === CheckSuiteConclusion.Failure) {
+            const { checkSuiteStatus, tracked } = branch.payload.doc.data();
+            if (
+              checkSuiteStatus === CheckSuiteConclusion.Failure &&
+              tracked === true
+            ) {
               newFailure = true;
-              console.log({ newFailure: branch });
+              console.log({ newFailure: branch.payload.doc.data() });
             }
           }
 
@@ -116,12 +119,20 @@ export class AppComponent implements OnInit {
             .filter(branch => branch.defaultBranch === true)
             .sort(sortByTime);
           const otherBranches = branchInfo
-            .filter(branch => branch.defaultBranch === false)
+            .filter(
+              branch =>
+                branch.defaultBranch === false && branch.tracked === false
+            )
+            .sort(sortByTime);
+
+          const trackedBranches = branchInfo
+            .filter(branch => branch.tracked === true)
             .sort(sortByTime);
 
           return {
             defaultBranches,
-            otherBranches
+            otherBranches,
+            trackedBranches
           };
         })
       );
@@ -142,6 +153,26 @@ export class AppComponent implements OnInit {
   setConfig(viewType: string): void {
     localStorage.setItem('viewType', viewType);
     this.config.next(viewType);
+  }
+
+  async trackBranch(branch: BranchInfo): Promise<void> {
+    const { organizationName, repositoryName, branchName } = branch;
+
+    const branchRef = this.afs
+      .collection<BranchInfo>('branches')
+      .doc<BranchInfo>(`${organizationName}-${repositoryName}-${branchName}`);
+
+    await branchRef.update({ tracked: true });
+  }
+
+  async untrackBranch(branch: BranchInfo): Promise<void> {
+    const { organizationName, repositoryName, branchName } = branch;
+
+    const branchRef = this.afs
+      .collection<BranchInfo>('branches')
+      .doc<BranchInfo>(`${organizationName}-${repositoryName}-${branchName}`);
+
+    await branchRef.update({ tracked: false });
   }
 }
 

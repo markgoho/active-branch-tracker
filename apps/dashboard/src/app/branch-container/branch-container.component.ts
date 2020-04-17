@@ -1,4 +1,10 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
 
 import { BranchInfo, CheckSuiteConclusion } from '../app.component';
 
@@ -13,6 +19,9 @@ export class BranchContainerComponent {
 
   @Input() branch: BranchInfo;
   @Input() viewType = 'expanded';
+
+  @Output() trackBranch = new EventEmitter<BranchInfo>();
+  @Output() untrackBranch = new EventEmitter<BranchInfo>();
 
   getBranchLink(): string {
     const {

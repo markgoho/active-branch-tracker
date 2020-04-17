@@ -120,7 +120,7 @@ export async function handleCheckSuiteEvent(
 
     const failure = checkSuiteStatus === 'failure' ? 1 : 0;
 
-    const currentStatus: BranchInfo = {
+    const currentStatus: Partial<BranchInfo> = {
       repositoryName,
       organizationName,
       branchName,
