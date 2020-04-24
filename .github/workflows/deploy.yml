@@ -26,9 +26,9 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build Application
-        run: npm run build
-      - name: Deploy Application
-        run: npm run deploy:dashboard
+        run: |
+          npm run build
+          npm run deploy:dashboard
       # - name: print log
       #   if: failure()
       #   run: |
