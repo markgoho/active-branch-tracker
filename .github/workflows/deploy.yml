@@ -27,11 +27,11 @@ jobs:
         run: npm ci
       - name: Build Application
         run: npm run build
-      - name: Deploy
-        run: npm run deploy:dashboard
-      - name: print log
-      - uses: actions/upload-artifact@v1
-        if: failure()
-        with:
-          name: firebase-log
-          path: /home/runner/.npm/_logs
+      # - name: Deploy
+      #   run: npm run deploy:dashboard
+      # - name: print log
+      #   uses: actions/upload-artifact@v1
+      #   if: failure()
+      #   with:
+      #     name: firebase-log
+      #     path: /home/runner/.npm/_logs
