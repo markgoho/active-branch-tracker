@@ -47,7 +47,7 @@
     "zone.js": "^0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/architect": "~0.900",
+    "@angular-devkit/architect": "^0.901.3",
     "@angular-devkit/build-angular": "0.901.3",
     "@angular/cli": "9.1.3",
     "@angular/compiler-cli": "^9.1.3",
@@ -71,7 +71,7 @@
     "prettier": "^2.0.5",
     "ts-jest": "25.2.1",
     "ts-node": "~7.0.0",
-    "tslint": "~6.0.0",
+    "tslint": "^6.1.1",
     "typescript": "~3.8.3"
   }
 }
