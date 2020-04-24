@@ -13,7 +13,7 @@ jobs:
       - name: Use Node.js v12
         uses: actions/setup-node@v1.1.0
         with:
-          node-version: "12.x"
+          node-version: '12.x'
       - name: Cache node modules
         uses: actions/cache@v1
         id: npm-cache
@@ -29,3 +29,6 @@ jobs:
         run: npm run build
       - name: Deploy Application
         run: npm run deploy:dashboard
+      # - name: print log
+      #   if: failure()
+      #   run: |
