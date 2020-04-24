@@ -10,16 +10,16 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-      - name: Use Node.js v12
+      - name: Use Node.js v10
         uses: actions/setup-node@v1
         with:
-          node-version: '10.16'
+          node-version: '10.x'
       - name: Cache node modules
         uses: actions/cache@v1
         id: npm-cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-node19-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node10-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node10-
       - name: Install dependencies
