@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireModule } from '@angular/fire';
+import { RouterModule } from '@angular/router';
 
 import { BranchesFeatureModule } from '@idc/branches/feature';
 
@@ -20,13 +21,20 @@ import { environment } from '../environments/environment';
       storageBucket: 'active-branches-report.appspot.com',
       messagingSenderId: '633810997367',
       appId: '1:633810997367:web:931c5bc156a5e71d097672',
-      measurementId: 'G-WV4T2RGHM3'
+      measurementId: 'G-WV4T2RGHM3',
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production
+      enabled: environment.production,
     }),
-    BranchesFeatureModule
+    RouterModule.forRoot([
+      { path: '', redirectTo: 'branches', pathMatch: 'full' },
+      {
+        path: 'branches',
+        loadChildren: () =>
+          import('@idc/branches/feature').then((m) => m.BranchesFeatureModule),
+      },
+    ]),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
