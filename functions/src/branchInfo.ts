@@ -1,4 +1,4 @@
-import { CheckSuiteConclusion } from './checkSuite';
+import { CheckConclusion } from './checkConclusion';
 
 export interface BranchInfo {
   repositoryName: string;
@@ -21,7 +21,7 @@ export interface BranchInfo {
   head_sha?: string;
   created_at?: string;
   updated_at?: string;
-  checkSuiteStatus?: CheckSuiteConclusion;
+  checkSuiteStatus?: CheckConclusion;
   defaultBranch: boolean;
   checkSuiteRuns: number;
   checkSuiteFailures: number;

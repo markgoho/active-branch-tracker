@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 
 import { Repository, Organization, Sender } from './webhookPayload';
 import { BranchInfo } from './branchInfo';
-import { CheckSuiteConclusion } from './checkSuite';
+import { CheckConclusion } from './checkConclusion';
 
 export interface CreateEventPayload {
   ref: string; // name of thing that got created
@@ -37,9 +37,9 @@ export async function handleCreateEvent(
     created_at: new Date().toISOString(),
     checkSuiteRuns: 0,
     checkSuiteFailures: 0,
-    checkSuiteStatus: CheckSuiteConclusion.Neutral,
+    checkSuiteStatus: CheckConclusion.Neutral,
     createdBy,
-    tracked: false
+    tracked: false,
   };
 
   try {
