@@ -4,8 +4,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireModule } from '@angular/fire';
 import { RouterModule } from '@angular/router';
 
-import { BranchesFeatureModule } from '@idc/branches/feature';
-
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 
