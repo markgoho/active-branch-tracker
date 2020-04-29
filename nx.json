@@ -37,6 +37,12 @@
     },
     "display-config": {
       "tags": ["scope:dashboard", "type:util"]
+    },
+    "jobs-feature": {
+      "tags": []
+    },
+    "jobs-data-access": {
+      "tags": []
     }
   }
 }

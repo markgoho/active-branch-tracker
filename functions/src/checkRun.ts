@@ -72,7 +72,6 @@ export async function handleCheckRunEvent(
   const lengthOfJob = completedAt.getTime() - startedAt.getTime();
 
   const jobInfo = {
-    jobName,
     started_at,
     completed_at,
     lengthOfJob,
@@ -81,11 +80,12 @@ export async function handleCheckRunEvent(
   const jobRef = admin
     .firestore()
     .collection(`check_runs`)
-    .doc(`${organizationName}-${repositoryName}`)
-    .collection(jobName);
+    .doc(`${organizationName}-${repositoryName}`);
 
   try {
-    await jobRef.add(jobInfo);
+    await jobRef.update({
+      [jobName]: admin.firestore.FieldValue.arrayUnion(jobInfo),
+    });
   } catch (e) {
     console.error(e);
   }

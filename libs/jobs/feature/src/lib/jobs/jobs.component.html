@@ -1,0 +1,10 @@
+<div style="color: white;" *ngFor="let job of jobs | async">
+  {{ job.repoName }}
+
+  <ng-container *ngFor="let jobInfo of job.jobs | keyvalue">
+    <h2>{{ jobInfo.key }}</h2>
+    <div *ngFor="let info of jobInfo.value">
+      {{ msToTime(info.lengthOfJob) }}
+    </div>
+  </ng-container>
+</div>

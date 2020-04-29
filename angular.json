@@ -260,6 +260,70 @@
           "style": "scss"
         }
       }
+    },
+    "jobs-feature": {
+      "projectType": "library",
+      "root": "libs/jobs/feature",
+      "sourceRoot": "libs/jobs/feature/src",
+      "prefix": "idc",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/jobs/feature/tsconfig.lib.json",
+              "libs/jobs/feature/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/jobs/feature/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/jobs/feature/jest.config.js",
+            "tsConfig": "libs/jobs/feature/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/jobs/feature/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "jobs-data-access": {
+      "projectType": "library",
+      "root": "libs/jobs/data-access",
+      "sourceRoot": "libs/jobs/data-access/src",
+      "prefix": "idc",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/jobs/data-access/tsconfig.lib.json",
+              "libs/jobs/data-access/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/jobs/data-access/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/jobs/data-access/jest.config.js",
+            "tsConfig": "libs/jobs/data-access/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/jobs/data-access/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

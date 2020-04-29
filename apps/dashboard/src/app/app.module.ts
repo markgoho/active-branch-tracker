@@ -31,6 +31,11 @@ import { environment } from '../environments/environment';
         loadChildren: () =>
           import('@idc/branches/feature').then((m) => m.BranchesFeatureModule),
       },
+      {
+        path: 'jobs',
+        loadChildren: () =>
+          import('@idc/jobs/feature').then((m) => m.JobsFeatureModule),
+      },
     ]),
   ],
   bootstrap: [AppComponent],

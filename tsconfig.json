@@ -21,7 +21,9 @@
       "@idc/branches/ui-components": [
         "libs/branches/ui-components/src/index.ts"
       ],
-      "@idc/display-config": ["libs/display-config/src/index.ts"]
+      "@idc/display-config": ["libs/display-config/src/index.ts"],
+      "@idc/jobs/feature": ["libs/jobs/feature/src/index.ts"],
+      "@idc/jobs/data-access": ["libs/jobs/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
