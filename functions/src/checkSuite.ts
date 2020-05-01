@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import { WebhookPayload } from './webhookPayload';
 import { BranchInfo } from './branchInfo';
 import { CheckConclusion } from './checkConclusion';
+import { createSafeBranchName } from './safeBranchName';
 
 export enum CheckSuiteActionType {
   Completed = 'completed',
@@ -83,10 +84,12 @@ export async function handleCheckSuiteEvent(
     latest_check_runs_count,
   } = check_suite;
 
+  const safeBranchName = createSafeBranchName(branchName);
+
   const checkSuitePayloadRef = admin
     .firestore()
     .collection('payloads')
-    .doc(`check_suite-${organizationName}-${repositoryName}-${branchName}`);
+    .doc(`check_suite-${organizationName}-${repositoryName}-${safeBranchName}`);
 
   try {
     await checkSuitePayloadRef.set(payload);
@@ -98,7 +101,7 @@ export async function handleCheckSuiteEvent(
     const branchRef = admin
       .firestore()
       .collection(`branches`)
-      .doc(`${organizationName}-${repositoryName}-${branchName}`);
+      .doc(`${organizationName}-${repositoryName}-${safeBranchName}`);
 
     const existingStatus = await branchRef.get();
 
@@ -111,6 +114,8 @@ export async function handleCheckSuiteEvent(
       checkSuiteFailures = existingStatusDoc.checkSuiteFailures;
     }
 
+    const timestamp = new Date(updated_at).getTime();
+
     const failure = checkSuiteStatus === 'failure' ? 1 : 0;
 
     const currentStatus: Partial<BranchInfo> = {
@@ -120,6 +125,7 @@ export async function handleCheckSuiteEvent(
       head_commit,
       head_sha,
       updated_at,
+      timestamp,
       checkSuiteRuns: checkSuiteRuns + 1,
       checkSuiteFailures: checkSuiteFailures + failure,
       checkSuiteStatus,
@@ -130,7 +136,7 @@ export async function handleCheckSuiteEvent(
       await admin
         .firestore()
         .collection(`branches`)
-        .doc(`${organizationName}-${repositoryName}-${branchName}`)
+        .doc(`${organizationName}-${repositoryName}-${safeBranchName}`)
         .set(currentStatus, { merge: true });
     } catch (e) {
       console.error(e);

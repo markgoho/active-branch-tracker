@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 import { Repository, Sender, Organization } from './webhookPayload';
+import { createSafeBranchName } from './safeBranchName';
 
 export interface DeleteEventPayload {
   ref: string; // branch name
@@ -15,13 +16,15 @@ export async function handleDeleteEvent(
 ): Promise<any> {
   const { ref: branchName, repository, organization } = payload;
 
+  const safeBranchName = createSafeBranchName(branchName);
+
   const { name: repositoryName } = repository;
   const { login: organizationName } = organization;
 
   const branchRef = admin
     .firestore()
     .collection('branches')
-    .doc(`${organizationName}-${repositoryName}-${branchName}`);
+    .doc(`${organizationName}-${repositoryName}-${safeBranchName}`);
 
   try {
     await branchRef.delete();

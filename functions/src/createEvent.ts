@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import { Repository, Organization, Sender } from './webhookPayload';
 import { BranchInfo } from './branchInfo';
 import { CheckConclusion } from './checkConclusion';
+import { createSafeBranchName } from './safeBranchName';
 
 export interface CreateEventPayload {
   ref: string; // name of thing that got created
@@ -20,6 +21,8 @@ export async function handleCreateEvent(
 ): Promise<any> {
   const { ref: branchName, repository, organization, sender } = payload;
 
+  const safeBranchName = createSafeBranchName(branchName);
+
   const { login: createdBy } = sender;
   const { name: repositoryName } = repository;
   const { login: organizationName } = organization;
@@ -27,7 +30,7 @@ export async function handleCreateEvent(
   const branchRef = admin
     .firestore()
     .collection('branches')
-    .doc(`${organizationName}-${repositoryName}-${branchName}`);
+    .doc(`${organizationName}-${repositoryName}-${safeBranchName}`);
 
   const branchInfo: BranchInfo = {
     repositoryName,
@@ -40,6 +43,7 @@ export async function handleCreateEvent(
     checkSuiteStatus: CheckConclusion.Neutral,
     createdBy,
     tracked: false,
+    timestamp: new Date().getTime(),
   };
 
   try {
