@@ -38,7 +38,7 @@ export const webhook = functions.https.onRequest(async (request, response) => {
 
 // Run every Friday at 1pm
 export const oldBranchesNotification = functions.pubsub
-  .schedule('0 15 * * 5')
+  .schedule('15 15 * * 5')
   .timeZone('America/New_York')
   .onRun(async (context) => {
     const today = new Date().getTime();
@@ -71,11 +71,13 @@ export const oldBranchesNotification = functions.pubsub
     }, '');
 
     sgMail.setApiKey(functions.config().sendgrid.key);
+    // console.log('Sending to email', functions.config().sendgrid.email);
+
     const msg = {
-      to: functions.config().sendgrid.email,
+      to: 'angus.irvine@ideacrew.com',
       cc: 'mark.goho@ideacrew.com',
       from: 'active-branch-tracker@no-reply.com',
-      subject: 'Stale Branch Report',
+      subject: `Stale Branch Report for week ending ${new Date().toLocaleDateString()}`,
       html: branchList,
     };
     try {
