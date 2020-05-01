@@ -44,6 +44,7 @@
       [viewType]="vm.config.trackedBranches"
       [branch]="branch"
       (untrackBranch)="branchListService.untrackBranch($event)"
+      (newReleaseDate)="branchListService.addReleaseDate($event)"
     ></idc-branch-container>
   </div>
 

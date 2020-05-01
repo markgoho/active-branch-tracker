@@ -31,6 +31,11 @@ import { environment } from '../environments/environment';
         loadChildren: () =>
           import('@idc/branches/feature').then((m) => m.BranchesFeatureModule),
       },
+      {
+        path: 'branches/:branchId',
+        loadChildren: () =>
+          import('@idc/branches/feature').then((m) => m.BranchDetailModule),
+      },
     ]),
   ],
   bootstrap: [AppComponent],

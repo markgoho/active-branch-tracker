@@ -28,4 +28,5 @@ export interface BranchInfo {
   createdBy?: string;
   tracked: boolean;
   timestamp: number;
+  releaseDate?: number;
 }

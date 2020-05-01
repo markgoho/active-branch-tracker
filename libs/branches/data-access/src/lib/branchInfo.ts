@@ -27,4 +27,6 @@ export interface BranchInfo {
   checkSuiteFailures: number;
   createdBy?: string;
   tracked: boolean;
+  timestamp: number;
+  releaseDate?: number;
 }

@@ -3,6 +3,7 @@
   [ngClass]="[branch.checkSuiteStatus, viewType ? viewType : 'expanded']"
   [class.tracked]="branch.tracked"
 >
+  <!-- Container Heading -->
   <div class="container-heading">
     <div class="heading-left">
       <ng-container *ngIf="branch.defaultBranch === false"
@@ -32,25 +33,32 @@
             branch.branchName
           }}</a>
         </div>
+        <idc-release-date
+          *ngIf="branch.tracked"
+          class="release-date"
+          [releaseDate]="branch.releaseDate"
+          (newReleaseDate)="changeReleaseDate($event)"
+        ></idc-release-date>
       </div>
     </div>
     <svg
-      *ngIf="branch.checkSuiteStatus === CheckSuiteConclusion.Failure"
-      class="svg-icon failure"
+      class="svg-icon"
+      [ngClass]="branch.checkSuiteStatus"
       width="2rem"
       height="2rem"
     >
-      <use href="assets/icons.svg#x"></use>
-    </svg>
-    <svg
-      *ngIf="branch.checkSuiteStatus === CheckSuiteConclusion.Success"
-      class="svg-icon success"
-      width="2rem"
-      height="2rem"
-    >
-      <use href="assets/icons.svg#check"></use>
+      <use
+        *ngIf="branch.checkSuiteStatus === CheckSuiteConclusion.Failure"
+        href="assets/icons.svg#x"
+      ></use>
+      <use
+        *ngIf="branch.checkSuiteStatus === CheckSuiteConclusion.Success"
+        href="assets/icons.svg#check"
+      ></use>
     </svg>
   </div>
+
+  <!-- Container Content -->
   <div class="card-content">
     <div class="left-column">
       <div class="last-updated">
@@ -95,8 +103,7 @@
     <div class="right-column">
       <span *ngIf="branch.checkSuiteRuns > 0" class="failure-percentage">{{
         getFailurePercentage()
-      }}</span
-      ><span></span>
+      }}</span>
     </div>
   </div>
 </div>
@@ -107,4 +114,16 @@
       <use href="assets/icons.svg#light-bulb"></use>
     </svg>
   </button>
+</ng-template>
+
+<ng-template #noReleaseDate>
+  <span
+    *ngIf="editReleaseDate === false; else editRelease"
+    (click)="editReleaseDate = true"
+    >No Release Date</span
+  >
+</ng-template>
+
+<ng-template #editRelease>
+  
 </ng-template>

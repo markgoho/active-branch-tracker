@@ -55,8 +55,11 @@
   }
 }
 
-.collapsed .repo-name {
-  display: none;
+.collapsed {
+  .repo-name,
+  .release-date {
+    display: none;
+  }
 }
 
 .heading-left {
@@ -128,6 +131,10 @@ a {
   font-family: 'Courier New', Courier, monospace;
   display: flex;
   align-items: center;
+}
+
+.release-date {
+  margin-top: 0.25rem;
 }
 
 .branch-name {

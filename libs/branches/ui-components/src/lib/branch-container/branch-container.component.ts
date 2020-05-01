@@ -3,16 +3,20 @@ import {
   ChangeDetectionStrategy,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
 } from '@angular/core';
 
-import { BranchInfo, CheckSuiteConclusion } from '@idc/branches/data-access';
+import {
+  BranchInfo,
+  CheckSuiteConclusion,
+  ReleaseDateInfo,
+} from '@idc/branches/data-access';
 
 @Component({
   selector: 'idc-branch-container',
   templateUrl: './branch-container.component.html',
   styleUrls: ['./branch-container.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BranchContainerComponent {
   CheckSuiteConclusion = CheckSuiteConclusion;
@@ -22,13 +26,14 @@ export class BranchContainerComponent {
 
   @Output() trackBranch = new EventEmitter<BranchInfo>();
   @Output() untrackBranch = new EventEmitter<BranchInfo>();
+  @Output() newReleaseDate = new EventEmitter<ReleaseDateInfo>();
 
   getBranchLink(): string {
     const {
       repositoryName,
       organizationName,
       branchName: head_branch,
-      defaultBranch
+      defaultBranch,
     } = this.branch;
 
     const needsTree = defaultBranch ? `` : `tree/`;
@@ -48,5 +53,13 @@ export class BranchContainerComponent {
     return Math.round(
       ((checkSuiteRuns - checkSuiteFailures) / checkSuiteRuns) * 100
     );
+  }
+
+  changeReleaseDate(event: string): void {
+    const info: ReleaseDateInfo = {
+      branch: this.branch,
+      releaseDate: new Date(event),
+    };
+    this.newReleaseDate.emit(info);
   }
 }
