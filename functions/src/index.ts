@@ -7,6 +7,10 @@ import { CreateEventPayload, handleCreateEvent } from './createEvent';
 import { DeleteEventPayload, handleDeleteEvent } from './deleteEvent';
 import { handleCheckRunEvent, CheckRunPayload } from './checkRun';
 import { BranchInfo } from './branchInfo';
+import {
+  handlePullRequestEvent,
+  PullRequestEventPayload,
+} from './pullRequestEvent';
 
 admin.initializeApp();
 
@@ -30,6 +34,10 @@ export const webhook = functions.https.onRequest(async (request, response) => {
 
     case 'check_run':
       await handleCheckRunEvent(request.body as CheckRunPayload);
+      break;
+
+    case 'pull_request':
+      await handlePullRequestEvent(request.body as PullRequestEventPayload);
       break;
   }
 

@@ -26,9 +26,15 @@ export async function handleDeleteEvent(
     .collection('branches')
     .doc(`${organizationName}-${repositoryName}-${safeBranchName}`);
 
-  try {
-    await branchRef.delete();
-  } catch (e) {
-    console.error(e);
+  const branch = await branchRef.get();
+
+  if (branch.exists) {
+    try {
+      await branchRef.delete();
+    } catch (e) {
+      console.error(e);
+    }
   }
+
+  return Promise.resolve();
 }

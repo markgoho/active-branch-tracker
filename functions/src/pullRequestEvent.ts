@@ -1,7 +1,9 @@
+import * as admin from 'firebase-admin';
+
 import { Repository, Organization, Sender } from './webhookPayload';
 import { GithubUser } from './user';
 
-export enum PullRequestActionType {
+export enum PullRequestAction {
   Assigned = 'assigned',
   Unassigned = 'unassigned',
   ReviewRequested = 'review_requested',
@@ -14,11 +16,12 @@ export enum PullRequestActionType {
   ReadyForReview = 'ready_for_review',
   Locked = 'locked',
   Unlocked = 'unlocked',
-  Reopened = 'reopened'
+  Reopened = 'reopened',
+  Synchronize = 'synchronize',
 }
 
 export interface PullRequestEventPayload {
-  action: PullRequestActionType;
+  action: PullRequestAction;
   number: number; // pull request number
   pull_request: PullRequest;
   repository: Repository;
@@ -34,8 +37,8 @@ export interface PullRequest {
   diff_url: string;
   patch_url: string;
   issue_url: string;
-  number: 8;
-  state: 'open' | 'closed' | 'all';
+  number: 8; // PR number for link
+  state: 'open' | 'closed' | 'all'; // critical property
   locked: boolean;
   title: string;
   user: GithubUser;
@@ -98,7 +101,7 @@ export interface PullRequest {
     };
   };
   author_association: string;
-  merged: boolean;
+  merged: boolean; // critical property
   mergeable: any;
   rebaseable: any;
   mergeable_state: 'unknown';
@@ -112,40 +115,46 @@ export interface PullRequest {
   changed_files: 0;
 }
 
-// export async function handlePullRequestEvent(
-//   payload: PullRequestEventPayload
-// ): Promise<any> {
-//   const { action, pull_request, repository, organization } = payload;
+export async function handlePullRequestEvent(
+  payload: PullRequestEventPayload
+): Promise<any> {
+  const { action, pull_request, repository, organization } = payload;
+  const { login: organizationName } = organization;
+  const { number: pullRequestNumber, head, merged } = pull_request;
 
-//   const { name: repositoryName, default_branch } = repository;
-//   const { login: organizationName } = organization;
+  const { ref: branchName } = head;
 
-//   const {
-//     head_branch: branchName,
-//     head_commit,
-//     head_sha,
-//     updated_at,
-//     conclusion: checkSuiteStatus
-//   } = check_suite;
+  const { name: repositoryName } = repository;
 
-//   const currentStatus: BranchInfo = {
-//     repositoryName,
-//     organizationName,
-//     branchName,
-//     head_commit,
-//     head_sha,
-//     updated_at,
-//     checkSuiteStatus,
-//     defaultBranch: default_branch === branchName
-//   };
+  if (action === PullRequestAction.Opened) {
+    // Do for new PR being opened
+    try {
+      await admin
+        .firestore()
+        .collection(`branches`)
+        .doc(`${organizationName}-${repositoryName}-${branchName}`)
+        .update({ pullRequestNumber });
+    } catch (e) {
+      console.error(e);
+    }
+  } else if (action === PullRequestAction.Closed && merged === true) {
+    // delete document is PR is closed AND merged
+    try {
+      const branchRef = admin
+        .firestore()
+        .collection(`branches`)
+        .doc(`${organizationName}-${repositoryName}-${branchName}`);
 
-//   try {
-//     await admin
-//       .firestore()
-//       .collection(`branches`)
-//       .doc(`${repositoryName}-${branchName}`)
-//       .set(currentStatus);
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
+      const branch = await branchRef.get();
+
+      if (branch.exists) {
+        await branchRef.delete();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  } else {
+    console.log('pull_request event not a merge');
+    return Promise.resolve();
+  }
+}

@@ -55,6 +55,16 @@
   }
 }
 
+.has-pr {
+  .latest-sha {
+    display: none;
+  }
+
+  .pull-request {
+    display: flex;
+  }
+}
+
 .collapsed {
   .repo-name,
   .release-date {
@@ -127,10 +137,15 @@ a {
 
 .branch-name,
 .commit-message,
-.latest-sha {
+.latest-sha,
+.pull-request {
   font-family: 'Courier New', Courier, monospace;
   display: flex;
   align-items: center;
+}
+
+.pull-request {
+  display: none;
 }
 
 .release-date {
@@ -150,6 +165,7 @@ a {
 .last-updated,
 .commit-message,
 .latest-sha,
+.pull-request,
 .committer {
   font-size: 1rem;
 

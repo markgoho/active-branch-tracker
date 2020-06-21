@@ -47,6 +47,12 @@ export class BranchContainerComponent {
     return `//github.com/${organizationName}/${repositoryName}/commit/${head_sha}`;
   }
 
+  getPullRequestLink(): string {
+    const { repositoryName, organizationName, pullRequestNumber } = this.branch;
+
+    return `//github.com/${organizationName}/${repositoryName}/pull/${pullRequestNumber}`;
+  }
+
   getFailurePercentage(): number {
     const { checkSuiteRuns, checkSuiteFailures } = this.branch;
 

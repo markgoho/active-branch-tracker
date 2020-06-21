@@ -29,4 +29,5 @@ export interface BranchInfo {
   tracked: boolean;
   timestamp: number;
   releaseDate?: number;
+  pullRequestNumber?: number;
 }
