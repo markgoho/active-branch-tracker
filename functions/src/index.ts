@@ -33,7 +33,7 @@ export const webhook = functions.https.onRequest(async (request, response) => {
       break;
   }
 
-  return response.status(200).send('Thanks');
+  response.status(200).send('Thanks');
 });
 
 // Run every Friday at 1pm
@@ -129,9 +129,9 @@ export const getOldBranches = functions.https.onRequest(
     };
     try {
       await sgMail.send(msg);
-      return response.status(200).send(branchList);
+      response.status(200).send(branchList);
     } catch (error) {
-      return response.status(500).send(error);
+      response.status(500).send(error);
     }
   }
 );
@@ -149,6 +149,6 @@ export const addTimestampToAllBranches = functions.https.onRequest(
       });
     });
 
-    return response.status(200).send('Thanks');
+    response.status(200).send('Thanks');
   }
 );
