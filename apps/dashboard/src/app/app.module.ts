@@ -29,12 +29,12 @@ import { environment } from '../environments/environment';
       {
         path: 'branches',
         loadChildren: () =>
-          import('@idc/branches/feature').then((m) => m.BranchesFeatureModule),
+          import('@idc/branches/feature').then(m => m.BranchesFeatureModule),
       },
       {
         path: 'branches/:branchId',
         loadChildren: () =>
-          import('@idc/branches/feature').then((m) => m.BranchDetailModule),
+          import('@idc/branches/feature').then(m => m.BranchDetailModule),
       },
     ]),
   ],

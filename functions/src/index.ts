@@ -48,7 +48,7 @@ export const webhook = functions.https.onRequest(async (request, response) => {
 export const oldBranchesNotification = functions.pubsub
   .schedule('15 15 * * 5')
   .timeZone('America/New_York')
-  .onRun(async (context) => {
+  .onRun(async context => {
     const today = new Date().getTime();
 
     const oneDayInMs = 1000 * 60 * 60 * 24;
@@ -63,7 +63,7 @@ export const oldBranchesNotification = functions.pubsub
 
     const oldBranches: BranchInfo[] = [];
 
-    allBranches.forEach(async (branch) => {
+    allBranches.forEach(async branch => {
       const branchInfo = branch.data() as BranchInfo;
 
       oldBranches.push(branchInfo);
@@ -112,7 +112,7 @@ export const getOldBranches = functions.https.onRequest(
 
     const oldBranches: BranchInfo[] = [];
 
-    allBranches.forEach(async (branch) => {
+    allBranches.forEach(async branch => {
       const branchInfo = branch.data() as BranchInfo;
 
       oldBranches.push(branchInfo);
@@ -148,7 +148,7 @@ export const addTimestampToAllBranches = functions.https.onRequest(
   async (request, response) => {
     const allBranches = await admin.firestore().collection('branches').get();
 
-    allBranches.forEach(async (branch) => {
+    allBranches.forEach(async branch => {
       const { updated_at } = branch.data() as BranchInfo;
       const branchUpdated = new Date(updated_at || 'January 1, 1970').getTime();
 

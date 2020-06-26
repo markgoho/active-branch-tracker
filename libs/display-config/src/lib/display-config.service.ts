@@ -5,7 +5,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 import { DisplayConfig, DisplayType } from './displayConfig';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DisplayConfigService {
   config: BehaviorSubject<string> = new BehaviorSubject<string>(
@@ -21,7 +21,7 @@ export class DisplayConfigService {
     if (localStorage.getItem('config') === null) {
       const config: DisplayConfig = {
         trackedBranches: DisplayType.Expanded,
-        otherBranches: DisplayType.Expanded
+        otherBranches: DisplayType.Expanded,
       };
 
       const configString = JSON.stringify(config);
@@ -37,7 +37,7 @@ export class DisplayConfigService {
 
     const newConfig = JSON.stringify({
       ...currentConfig,
-      ...config
+      ...config,
     });
 
     localStorage.setItem('config', newConfig);

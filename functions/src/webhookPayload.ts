@@ -136,7 +136,7 @@ export interface Owner {
   type: string;
   site_admin: false;
 }
- export interface App {
+export interface App {
   id: number;
   slug: string;
   node_id: string;
@@ -149,4 +149,4 @@ export interface Owner {
   updated_at: string;
   permissions: { [permissionName: string]: string };
   events: string[];
- }
+}

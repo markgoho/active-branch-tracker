@@ -5,12 +5,12 @@ import { map } from 'rxjs/operators';
 import {
   BranchInfo,
   BranchListService,
-  CheckSuiteConclusion
+  CheckSuiteConclusion,
 } from '@idc/branches/data-access';
 import {
   DisplayConfigService,
   DisplayConfig,
-  DisplayType
+  DisplayType,
 } from '@idc/display-config';
 
 import { BranchInfoVM } from '../branchInfoVM';
@@ -19,7 +19,7 @@ import { BranchInfoVM } from '../branchInfoVM';
   selector: 'idc-active-branches',
   templateUrl: './active-branches.component.html',
   styleUrls: ['./active-branches.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActiveBranchesComponent implements OnInit {
   CheckSuiteConclusion = CheckSuiteConclusion;
@@ -40,9 +40,12 @@ export class ActiveBranchesComponent implements OnInit {
   ngOnInit(): void {
     this.branchInfo$ = this.branchListService.branchInfo$.pipe(
       map(branchInfo => {
+        console.log(branchInfo.length);
+
         const defaultBranches = branchInfo
           .filter(branch => branch.defaultBranch === true)
           .sort(sortByTime);
+
         const otherBranches = branchInfo
           .filter(
             branch => branch.defaultBranch === false && branch.tracked === false
@@ -53,22 +56,26 @@ export class ActiveBranchesComponent implements OnInit {
           .filter(branch => branch.tracked === true)
           .sort(sortByTime);
 
+        console.log(
+          otherBranches.filter(branch => branch.organizationName === 'ideacrew')
+        );
+
         return {
           defaultBranches,
           otherBranches,
-          trackedBranches
+          trackedBranches,
         };
       })
     );
 
     this.activeBranchesVm$ = combineLatest([
       this.branchInfo$,
-      this.configService.config$
+      this.configService.config$,
     ]).pipe(
       map(([branchInfo, config]: [BranchInfoVM, DisplayConfig]) => {
         return {
           ...branchInfo,
-          config
+          config,
         };
       })
     );

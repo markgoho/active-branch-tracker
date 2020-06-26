@@ -5,5 +5,5 @@ export enum CheckSuiteConclusion {
   Cancelled = 'cancelled',
   TimedOut = 'timed_out',
   ActionRequired = 'action_required',
-  Stale = 'stale'
+  Stale = 'stale',
 }

@@ -1,6 +1,6 @@
 export enum DisplayType {
   Expanded = 'expanded',
-  Collapsed = 'collapsed'
+  Collapsed = 'collapsed',
 }
 
 export interface DisplayConfig {

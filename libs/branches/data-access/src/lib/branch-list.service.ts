@@ -25,9 +25,9 @@ export class BranchListService {
       .collection<BranchInfo>('branches')
       .snapshotChanges()
       .pipe(
-        tap(async (docChange) => {
+        tap(async docChange => {
           const modified = docChange.filter(
-            (change) => change.type === 'modified'
+            change => change.type === 'modified'
           );
           let newFailure = false;
 
@@ -51,7 +51,7 @@ export class BranchListService {
       );
 
     this.branchInfo$ = this.rawBranchData$.pipe(
-      map((docChange) => docChange.map((change) => change.payload.doc.data()))
+      map(docChange => docChange.map(change => change.payload.doc.data()))
     );
   }
 
