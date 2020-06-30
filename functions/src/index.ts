@@ -82,8 +82,7 @@ export const oldBranchesNotification = functions.pubsub
     // console.log('Sending to email', functions.config().sendgrid.email);
 
     const msg = {
-      to: 'angus.irvine@ideacrew.com',
-      cc: 'mark.goho@ideacrew.com',
+      to: 'lead_devs@ideacrew.com',
       from: 'active-branch-tracker@no-reply.com',
       subject: `Stale Branch Report for week ending ${new Date().toLocaleDateString()}`,
       html: branchList,
