@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 
 import {
-  BranchInfo,
   CheckSuiteConclusion,
   ReleaseDateInfo,
 } from '@idc/branches/data-access';
+import { BranchInfoVM } from '@idc/util';
 
 @Component({
   selector: 'idc-branch-container',
@@ -21,45 +21,12 @@ import {
 export class BranchContainerComponent {
   CheckSuiteConclusion = CheckSuiteConclusion;
 
-  @Input() branch: BranchInfo;
+  @Input() branch: BranchInfoVM;
   @Input() viewType: 'expanded' | 'collapsed' = 'expanded';
 
-  @Output() trackBranch = new EventEmitter<BranchInfo>();
-  @Output() untrackBranch = new EventEmitter<BranchInfo>();
-  @Output() newReleaseDate = new EventEmitter<ReleaseDateInfo>();
-
-  getBranchLink(): string {
-    const {
-      repositoryName,
-      organizationName,
-      branchName: head_branch,
-      defaultBranch,
-    } = this.branch;
-
-    const needsTree = defaultBranch ? `` : `tree/`;
-
-    return `//github.com/${organizationName}/${repositoryName}/${needsTree}${head_branch}`;
-  }
-
-  getCommitLink(): string {
-    const { repositoryName, organizationName, head_sha } = this.branch;
-
-    return `//github.com/${organizationName}/${repositoryName}/commit/${head_sha}`;
-  }
-
-  getPullRequestLink(): string {
-    const { repositoryName, organizationName, pullRequestNumber } = this.branch;
-
-    return `//github.com/${organizationName}/${repositoryName}/pull/${pullRequestNumber}`;
-  }
-
-  getFailurePercentage(): number {
-    const { checkSuiteRuns, checkSuiteFailures } = this.branch;
-
-    return Math.round(
-      ((checkSuiteRuns - checkSuiteFailures) / checkSuiteRuns) * 100
-    );
-  }
+  @Output() readonly trackBranch = new EventEmitter<BranchInfoVM>();
+  @Output() readonly untrackBranch = new EventEmitter<BranchInfoVM>();
+  @Output() readonly newReleaseDate = new EventEmitter<ReleaseDateInfo>();
 
   changeReleaseDate(event: string): void {
     const info: ReleaseDateInfo = {

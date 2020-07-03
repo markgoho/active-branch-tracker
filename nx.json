@@ -37,6 +37,9 @@
     },
     "display-config": {
       "tags": ["scope:dashboard", "type:util"]
+    },
+    "util": {
+      "tags": []
     }
   }
 }

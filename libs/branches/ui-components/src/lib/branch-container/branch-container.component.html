@@ -30,7 +30,7 @@
           <svg class="svg-icon branch-icon" width="1rem" height="1rem">
             <use href="assets/icons.svg#branch"></use>
           </svg>
-          <a class="no-wrap" href="{{ getBranchLink() }}">{{
+          <a class="no-wrap" href="{{ branch.branchLink }}">{{
             branch.branchName
           }}</a>
         </div>
@@ -85,14 +85,16 @@
         <svg class="svg-icon" width="1rem" height="1rem">
           <use href="assets/icons.svg#git-commit"></use>
         </svg>
-        <a href="{{ getCommitLink() }}">{{ branch.head_sha | slice: 0:7 }}</a>
+        <a href="{{ branch.commitLink }}">{{ branch.head_sha | slice: 0:7 }}</a>
       </div>
 
       <div class="pull-request">
         <svg class="svg-icon" width="1rem" height="1rem">
           <use href="assets/icons.svg#pull-request"></use>
         </svg>
-        <a href="{{ getPullRequestLink() }}">{{ branch.pullRequestNumber }}</a>
+        <a href="{{ branch.pullRequestLink }}">{{
+          branch.pullRequestNumber
+        }}</a>
       </div>
 
       <div class="committer">
@@ -110,7 +112,7 @@
 
     <div class="right-column">
       <span *ngIf="branch.checkSuiteRuns > 0" class="failure-percentage">{{
-        getFailurePercentage()
+        branch.failurePercentage
       }}</span>
     </div>
   </div>

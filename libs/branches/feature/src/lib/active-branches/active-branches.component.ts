@@ -13,7 +13,26 @@ import {
   DisplayType,
 } from '@idc/display-config';
 
-import { BranchInfoVM } from '../branchInfoVM';
+import {
+  getPullRequestLink,
+  getFailurePercentage,
+  getBranchLink,
+  getCommitLink,
+  BranchInfoVM,
+} from '@idc/util';
+
+export interface SeparateBranchInfo {
+  defaultBranches: BranchInfoVM[];
+  otherBranches: BranchInfoVM[];
+  trackedBranches: BranchInfoVM[];
+}
+
+export interface ActiveBranchesVM {
+  defaultBranches: BranchInfoVM[];
+  otherBranches: BranchInfoVM[];
+  trackedBranches: BranchInfoVM[];
+  config: DisplayConfig;
+}
 
 @Component({
   selector: 'idc-active-branches',
@@ -24,8 +43,8 @@ import { BranchInfoVM } from '../branchInfoVM';
 export class ActiveBranchesComponent implements OnInit {
   CheckSuiteConclusion = CheckSuiteConclusion;
   DisplayType = DisplayType;
-  branchInfo$: Observable<BranchInfoVM>;
-  activeBranchesVm$: Observable<any>;
+  branchInfo$: Observable<SeparateBranchInfo>;
+  activeBranchesVm$: Observable<ActiveBranchesVM>;
 
   // time$: Observable<Date> = timer(0, 60000).pipe(
   //   map(tick => new Date()),
@@ -40,25 +59,22 @@ export class ActiveBranchesComponent implements OnInit {
   ngOnInit(): void {
     this.branchInfo$ = this.branchListService.branchInfo$.pipe(
       map(branchInfo => {
-        console.log(branchInfo.length);
-
         const defaultBranches = branchInfo
           .filter(branch => branch.defaultBranch === true)
+          .map(addVMDetails)
           .sort(sortByTime);
 
         const otherBranches = branchInfo
           .filter(
             branch => branch.defaultBranch === false && branch.tracked === false
           )
+          .map(addVMDetails)
           .sort(sortByTime);
 
         const trackedBranches = branchInfo
           .filter(branch => branch.tracked === true)
+          .map(addVMDetails)
           .sort(sortByTime);
-
-        console.log(
-          otherBranches.filter(branch => branch.organizationName === 'ideacrew')
-        );
 
         return {
           defaultBranches,
@@ -72,7 +88,7 @@ export class ActiveBranchesComponent implements OnInit {
       this.branchInfo$,
       this.configService.config$,
     ]).pipe(
-      map(([branchInfo, config]: [BranchInfoVM, DisplayConfig]) => {
+      map(([branchInfo, config]: [SeparateBranchInfo, DisplayConfig]) => {
         return {
           ...branchInfo,
           config,
@@ -80,6 +96,20 @@ export class ActiveBranchesComponent implements OnInit {
       })
     );
   }
+
+  trackByBranchName(index: number, branch: BranchInfo): string {
+    return `${branch.organizationName}${branch.repositoryName}${branch.branchName}`;
+  }
+}
+
+function addVMDetails(branch: BranchInfo): BranchInfoVM {
+  return {
+    ...branch,
+    branchLink: getBranchLink(branch),
+    commitLink: getCommitLink(branch),
+    pullRequestLink: getPullRequestLink(branch),
+    failurePercentage: getFailurePercentage(branch),
+  };
 }
 
 function sortByTime(branchA: BranchInfo, branchB: BranchInfo): number {

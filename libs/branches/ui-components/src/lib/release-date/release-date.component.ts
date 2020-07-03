@@ -18,7 +18,7 @@ export class ReleaseDateComponent {
 
   @Input() releaseDate: number;
 
-  @Output() newReleaseDate = new EventEmitter<Date>();
+  @Output() readonly newReleaseDate = new EventEmitter<Date>();
 
   emitReleaseDate(date: string): void {
     this.editingReleaseDate = false;
